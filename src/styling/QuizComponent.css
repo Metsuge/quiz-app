@@ -1,0 +1,15 @@
+#quiz-container{
+    position:absolute;
+    right: 100px;
+    top:50px;
+    border: 1px solid green;
+    width:500px;
+    height: 400px;
+    padding: 35px;
+}
+
+#main-answers-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
