@@ -3,30 +3,25 @@ import Question from './Question';
 import Answer from './Answer';
 import { useEffect, useState } from 'react';
 
-function QuizComponent(data) {
-  // const [ question, setquestion] = useState();
-
-  // if(data.data && data.data.results.length > 0){
-  //   // console.log(data.data.results);
-  //   // console.log(data);
-  //   // setquestion(data.data.results[0].question)
-  // } else console.log('Loading');
-
-
+function QuizComponent(data ) {
+  console.log(data.answers[0]);
   return (
     <div className="QuizComponent">
         <div id='quiz-container'>
             <h1>QUIZ COMPONENT</h1>
             <div>
-                <Question data={data}/>
+                <Question question={data.question}/>
             </div>
             <div id='main-answers-container'> 
-                <Answer />
-                <Answer />
-                <Answer />
+
+            {data.answers[0].map((object, i) => <Answer answers={object} key={i} />)}
+              
+            
+          
+                
             </div>
             
-        </div>
+        </div> 
         
     </div>
   );

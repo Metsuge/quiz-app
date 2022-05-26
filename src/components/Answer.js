@@ -1,10 +1,11 @@
 import '../styling/Answer.css';
 
-function Answer() {
+function Answer(answer) {
+  console.log(answer);
   return (
     <div className="Answer">
         <div id='Answer-container'>
-            <button>Answer</button>
+            <button>{answer.answers}</button>
         </div>
     </div>
   );
