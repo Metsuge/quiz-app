@@ -1,11 +1,10 @@
 import '../styling/Answer.css';
 
-function Answer(answer) {
-  console.log(answer);
+function Answer({answers, isRightAnswer}) {
   return (
     <div className="Answer">
         <div id='Answer-container'>
-            <button>{answer.answers}</button>
+            <button onClick={() => {isRightAnswer(answers)}}>{answers}</button>
         </div>
     </div>
   );
