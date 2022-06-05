@@ -6,13 +6,14 @@ import { useEffect, useState } from 'react';
 
 
 function QuizComponent() {
-  let answerElements = [];
+  // let answerElements =[];
   const random = Math.floor(Math.random() * 5);
 
   const [APIData, setAPI] = useState({});
   const [question, setQuestion] = useState("");
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
+  const [objectsLength, setObjectsLength] = useState(0);
 
   useEffect(()=>{
     (async () => {
@@ -20,33 +21,25 @@ function QuizComponent() {
       const json = await data.json();
       setAPI(json.results)
       setQuestion(json.results[index].question)
-      
-      setAnswers(answers =>[...answers, [...json.results[index].incorrect_answers]]);
-      // setAnswers(answers => answers.splice(random, json.results[index].correct_answer))
+      setAnswers(json.results[index].incorrect_answers);
+      setObjectsLength(json.results.length);
 
     })();
   }, []);
-  console.log('answers',answers);
-  if(APIData[index]){
-    console.log(APIData[0]);
 
-    for (let i=0; i< (APIData[index].incorrect_answers.length +1); i++){
-      let answerArray = [...APIData[i].incorrect_answers];
-      // console.log(answerArray);
-      // console.log(answerArray.splice(random, (random-1), APIData[i].correct_answer));
-      // setAnswers(answers =>[...answers, answerArray]);
-      
-      // answerElements.push(<Answer key={i} answer={answerArray[i]} />)
-      
-      
-    }
+ if(APIData[index]){ 
+  answers.splice(random,0, APIData[index].correct_answer);
   }
   
-  
-console.log('APIData',APIData);
-if(APIData[0]){
-  console.log('answers', answers.splice(random, 0, APIData[0].correct_answer));
-}
+  const nextQuestion = function(){
+    if(index !== (objectsLength.length -1)){
+      setIndex(index => index + 1);
+      setQuestion(APIData[index].question)
+      setAnswers(APIData[index].incorrect_answers);
+    } else {
+      console.log('This is the last question.');
+    }
+  };
 
   return (
     <div className="QuizComponent">
@@ -55,11 +48,15 @@ if(APIData[0]){
             <div>
                 <Question question={question} APIData={APIData}/>
             </div>
-            
-            <div><button>Next question/ </button></div>
+
+            <div>
+              <button onClick={() => nextQuestion(index)}>Next question</button>
+            </div>
         
         <div id='main-answers-container'> 
-        {/* {answerElements}  */}
+        {answers.map(function(item, i){
+              return <Answer key={i} answer={item} />
+            })}
       </div>
     </div>
   );

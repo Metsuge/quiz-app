@@ -26,7 +26,6 @@ const QuizState = (props) => {
         })
     };
 
-
     return <QuizContext.Provider value={{
         api: state.api,
         NextQuestion,
