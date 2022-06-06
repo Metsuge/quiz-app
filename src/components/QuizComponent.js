@@ -21,21 +21,32 @@ function QuizComponent() {
       const json = await data.json();
       setAPI(json.results)
       setQuestion(json.results[index].question)
-      setAnswers(json.results[index].incorrect_answers);
       setObjectsLength(json.results.length);
-
+  
     })();
+   
   }, []);
 
- if(APIData[index]){ 
-  answers.splice(random,0, APIData[index].correct_answer);
-  }
-  
+useEffect(() => {
+   if (APIData[index]) {
+     const random = Math.floor(Math.random() * 5);
+     const object = APIData[index];
+     const deepCpy = [...object.incorrect_answers];
+     deepCpy.splice(random, 0, APIData[index].correct_answer);
+     
+     setAnswers(deepCpy);
+     setQuestion(object.question);
+   }
+}, [index, APIData])
+
+
   const nextQuestion = function(){
-    if(index !== (objectsLength.length -1)){
-      setIndex(index => index + 1);
-      setQuestion(APIData[index].question)
-      setAnswers(APIData[index].incorrect_answers);
+    if(index !== (objectsLength.length-1)){
+      setIndex(index + 1);
+    console.log(objectsLength.length-1, index);
+      // setQuestion(APIData[index].question);
+      // setAnswers(APIData[index].incorrect_answers);
+   
     } else {
       console.log('This is the last question.');
     }
@@ -46,7 +57,7 @@ function QuizComponent() {
         
             <h1>QUIZ COMPONENT</h1>
             <div>
-                <Question question={question} APIData={APIData}/>
+                <Question question={question} APIData={APIData} index={index}/>
             </div>
 
             <div>
@@ -55,7 +66,7 @@ function QuizComponent() {
         
         <div id='main-answers-container'> 
         {answers.map(function(item, i){
-              return <Answer key={i} answer={item} />
+              return <Answer key={i} answer={item} index={index} />
             })}
       </div>
     </div>

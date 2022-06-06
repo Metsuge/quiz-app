@@ -1,7 +1,7 @@
 import '../styling/Answer.css';
 import { useEffect, useState } from 'react';
 
-function Answer({ answer}) {
+function Answer({ answer, index}) {
 
   return (
     <div className="Answer">
