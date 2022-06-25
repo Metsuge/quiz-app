@@ -1,7 +1,8 @@
 import "../styling/QuizComponent.css";
 import Question from "./Question";
 import Answer from "./Answer";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
+import {decode} from "html-entities";
 
 function QuizComponent() {
   const [APIData, setAPI] = useState({});
@@ -11,22 +12,25 @@ function QuizComponent() {
     incorrect_answers: [],
     correct_answer: "",
     answers: [],
+    answersEnabled: true,
   });
-  const [question, setQuestion] = useState("");
   const [index, setIndex] = useState(0);
-  // const [answers, setAnswers] = useState([]);
   const [objectsLength, setObjectsLength] = useState(0);
   const [rightAnswer, setRightAnswer] = useState({
     answer: "",
     addstyling: false,
     tag: 0,
   });
+  const [userStatus, setUserStatus] = useState({
+    correctAnswers: 0,
+    incorrect_answers: 0,
+    hintsTaken: 0,
+    answerSelected: false,
+  });
 
   useEffect(() => {
     (async () => {
-      const data = await fetch(
-        "https://opentdb.com/api.php?amount=10&type=multiple"
-      );
+      const data = await fetch("https://opentdb.com/api.php?amount=10&type=multiple");
       const json = await data.json();
       setAPI(json.results);
       setdataObject((prevState) => ({
@@ -37,7 +41,6 @@ function QuizComponent() {
         correct_answer: json.results[index].correct_answer,
       }));
 
-      setQuestion(json.results[index].question);
       setObjectsLength(json.results.length);
     })();
   }, []);
@@ -58,8 +61,6 @@ function QuizComponent() {
         answers: [...deepCpy],
       }));
 
-      // setAnswers(deepCpy);
-      setQuestion(object.question);
       setRightAnswer((prevState) => ({
         ...prevState,
         answer: APIData[index].correct_answer,
@@ -70,6 +71,11 @@ function QuizComponent() {
   }, [index, APIData]);
 
   const nextQuestion = function () {
+    setUserStatus((prevState) => ({
+      ...prevState,
+      answerSelected: false,
+    }));
+    //goes to next object on in the array
     if (index !== objectsLength - 1) {
       setIndex((prevState) => prevState + 1);
     } else {
@@ -78,7 +84,13 @@ function QuizComponent() {
   };
 
   const isRightAnswer = function (userAnswer, tag) {
-    console.log(tag);
+    // Checks if user selected answer is right
+
+    setUserStatus((prevState) => ({
+      ...prevState,
+      answerSelected: true,
+    }));
+
     if (userAnswer === dataObject.correct_answer) {
       console.log("Right answer!");
       setRightAnswer((prevState) => ({
@@ -86,12 +98,20 @@ function QuizComponent() {
         addstyling: true,
         tag: tag,
       }));
-    } else console.log("NOPE");
+      setUserStatus((prevState) => ({
+        ...prevState,
+        correctAnswers: userStatus.correctAnswers + 1,
+      }));
+    } else {
+      setUserStatus((prevState) => ({
+        ...prevState,
+        incorrect_answers: userStatus.incorrect_answers + 1,
+      }));
+    }
   };
 
   const hint = function () {
     //removes one inncorect answer on each click
-
     const random = Math.floor(Math.random() * 5);
     dataObject.incorrect_answers.pop();
     const deepCpy = [...dataObject.incorrect_answers];
@@ -101,33 +121,44 @@ function QuizComponent() {
       ...prevState,
       answers: [...deepCpy],
     }));
+
+    setUserStatus((prevState) => ({
+      ...prevState,
+      hintsTaken: userStatus.hintsTaken + 1,
+    }));
   };
+
   return (
     <div className="QuizComponent">
-      <h1>QUIZ COMPONENT</h1>
+      <div>Your score:{userStatus.correctAnswers}</div>
+
       <div>
-        <Question question={question} index={index} />
+        <Question question={decode(dataObject.question, {level: "all"})} index={index} />
       </div>
 
       <div>
-        <button onClick={() => nextQuestion(index)}>Next question</button>
-        <button id="hint" onClick={() => hint()}>
-          Hint
-        </button>
+        {!userStatus.answerSelected ? (
+          <button disabled={false} className="button next" onClick={() => nextQuestion(index)}>
+            Skip
+          </button>
+        ) : (
+          <button disabled={!userStatus.answerSelected} className="button next" onClick={() => nextQuestion(index)}>
+            Next question
+          </button>
+        )}
+
+        {!userStatus.answerSelected ? (
+          <button className="button hint" id="hint" onClick={() => hint()}>
+            Hint
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
 
       <div id="main-answers-container">
         {dataObject.answers.map(function (item, i) {
-          return (
-            <Answer
-              key={i}
-              tag={i}
-              rightAnswer={rightAnswer}
-              answer={item}
-              index={index}
-              isRightAnswer={isRightAnswer}
-            />
-          );
+          return <Answer key={i} tag={i} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
         })}
       </div>
     </div>
