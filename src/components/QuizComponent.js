@@ -85,7 +85,8 @@ function QuizComponent() {
     //goes to next object on in the array
     if (index !== objectsLength - 1) {
       setIndex((prevState) => prevState + 1);
-    } else {
+      console.log("index", index);
+    } else if (index === 8) {
       console.log("This is the last question.");
     }
   };
@@ -140,39 +141,65 @@ function QuizComponent() {
     getWrongAnswers();
   };
 
+  const restart = function () {
+    setIndex(() => 0);
+  };
+
   return (
     <div className="QuizComponent">
       <div>Your score:{userStatus.correctAnswers}</div>
 
-      <div>
-        <Question question={decode(dataObject.question, {level: "all"})} index={index} />
-      </div>
+      {index <= 8 ? (
+        <div id="main-quiz-elements">
+          <div>
+            Question {index + 1} out of {objectsLength}
+          </div>
 
-      <div>
-        {!userStatus.answerSelected ? (
-          <button disabled={false} className="button next" onClick={() => nextQuestion(index)}>
-            Skip
-          </button>
-        ) : (
-          <button disabled={!userStatus.answerSelected} className="button next" onClick={() => nextQuestion(index)}>
-            Next question
-          </button>
-        )}
+          <div>
+            <Question question={decode(dataObject.question, {level: "all"})} index={index} />
+          </div>
 
-        {!userStatus.answerSelected ? (
-          <button className="button hint" id="hint" onClick={() => hint()}>
-            Hint
-          </button>
-        ) : (
-          <></>
-        )}
-      </div>
+          <div>
+            {!userStatus.answerSelected ? (
+              <button disabled={false} className="button next" onClick={() => nextQuestion(index)}>
+                Skip
+              </button>
+            ) : (
+              <button disabled={!userStatus.answerSelected} className="button next" onClick={() => nextQuestion(index)}>
+                Next question
+              </button>
+            )}
 
-      <div id="main-answers-container">
-        {dataObject.answers.map(function (item, i) {
-          return <Answer key={i} tag={i} userStatus={userStatus} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
-        })}
-      </div>
+            {!userStatus.answerSelected ? (
+              <button className="button hint" id="hint" onClick={() => hint()}>
+                Hint
+              </button>
+            ) : (
+              <></>
+            )}
+          </div>
+
+          <div id="main-answers-container">
+            {dataObject.answers.map(function (item, i) {
+              return <Answer key={i} tag={i} userStatus={userStatus} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
+            })}
+          </div>
+        </div>
+      ) : (
+        <div id="finish">
+          <div id="finish-text">Quiz finished!</div>
+          <div id="stats" className="stats-text h1">
+            Statistics:
+            <div className="stats-text">Right answers: {userStatus.correctAnswers} </div>
+            <div className="stats-text">Wrong answers: {userStatus.incorrect_answers} </div>
+          </div>
+          <button id="play-again-main">
+            <div id="play-again" onClick={() => restart()}>
+              PLAY AGAIN
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

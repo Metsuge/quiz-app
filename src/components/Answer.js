@@ -2,15 +2,6 @@ import "../styling/Answer.css";
 import {useEffect, useState} from "react";
 
 function Answer({answer, userStatus, isRightAnswer, tag, rightAnswer}) {
-  // const hideAnswersOnHint = function () {
-  //   if (userStatus.hintsTaken > 0 && document.getElementById(`button-${tag}`)) {
-  //     if (tag !== rightAnswer.tag) {
-  //       getWrongAnswers(tag);
-  //     }
-  //   }
-  // };
-  // hideAnswersOnHint();
-
   useEffect(() => {
     // If the tag is for a wrong answer, hitn() makes it display:none;
     let buttonArray = [].slice.call(document.getElementsByClassName("button answers"));
@@ -29,7 +20,6 @@ function Answer({answer, userStatus, isRightAnswer, tag, rightAnswer}) {
         document.getElementById(`button-${tag}`).style.backgroundImage = "linear-gradient(92.88deg, #80d296 43.89%, #28cf9a 64.72%)";
       } else if (tag !== rightAnswer.tag && document.getElementById(`button-${tag}`)) {
         // Else turn red
-        console.log(tag, rightAnswer.tag);
         document.getElementById(`button-${tag}`).style.backgroundImage = "linear-gradient(92.88deg, #b54545 9.16%, #cc4343 43.89%, #d73f3f 64.72%)";
       }
 
@@ -53,11 +43,9 @@ function Answer({answer, userStatus, isRightAnswer, tag, rightAnswer}) {
 
   return (
     <div className="Answer" tag={tag}>
-      {/* <div id='Answer-container'> */}
       <button id={"button-" + tag} className="button answers" tag={tag} onClick={() => onClickFunctions()}>
         {answer}
       </button>
-      {/* </div> */}
     </div>
   );
 }
