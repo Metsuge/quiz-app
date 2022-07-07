@@ -14,6 +14,7 @@ function QuizComponent() {
     answers: [],
     answersEnabled: true,
   });
+
   const [index, setIndex] = useState(0);
   const [objectsLength, setObjectsLength] = useState(0);
   const [rightAnswer, setRightAnswer] = useState({
@@ -21,6 +22,7 @@ function QuizComponent() {
     addstyling: false,
     tag: 0,
   });
+
   const [userStatus, setUserStatus] = useState({
     correctAnswers: 0,
     incorrect_answers: 0,
@@ -67,6 +69,11 @@ function QuizComponent() {
         addstyling: false,
         tag: random,
       }));
+
+      setUserStatus((prevState) => ({
+        ...prevState,
+        hintsTaken: 0,
+      }));
     }
   }, [index, APIData]);
 
@@ -109,23 +116,28 @@ function QuizComponent() {
       }));
     }
   };
+  let wrongAnswrs = [];
+  for (let i = 0; i < 4; i++) {
+    if (i !== rightAnswer.tag) {
+      wrongAnswrs.push(i);
+    }
+  }
+
+  const getWrongAnswers = function () {
+    let buttonArray = [].slice.call(document.getElementsByClassName("button answers"));
+    var filtered = buttonArray.filter(function (value, index, arr) {
+      return value.innerHTML !== dataObject.correct_answer;
+    });
+
+    filtered[userStatus.hintsTaken].style.display = "none";
+  };
 
   const hint = function () {
-    //removes one inncorect answer on each click
-    const random = Math.floor(Math.random() * 5);
-    dataObject.incorrect_answers.pop();
-    const deepCpy = [...dataObject.incorrect_answers];
-    deepCpy.splice(random, 0, dataObject.correct_answer);
-
-    setdataObject((prevState) => ({
-      ...prevState,
-      answers: [...deepCpy],
-    }));
-
     setUserStatus((prevState) => ({
       ...prevState,
-      hintsTaken: userStatus.hintsTaken + 1,
+      hintsTaken: userStatus.hintsTaken < 2 ? userStatus.hintsTaken + 1 : userStatus.hintsTaken,
     }));
+    getWrongAnswers();
   };
 
   return (
@@ -158,7 +170,7 @@ function QuizComponent() {
 
       <div id="main-answers-container">
         {dataObject.answers.map(function (item, i) {
-          return <Answer key={i} tag={i} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
+          return <Answer key={i} tag={i} userStatus={userStatus} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
         })}
       </div>
     </div>

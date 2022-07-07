@@ -45,6 +45,7 @@
     touch-action: manipulation;
     margin: 5px;
     height:30px;
+    display: block;
   }
 
 
