@@ -1,13 +1,14 @@
 #quiz-container{
-    /* position:absolute;
-    right: 100px;
-    top:50px; */
-    /* border: 1px solid green;
-    border-radius: 30%; */
     width:500px;
     height: 400px;
     padding: 35px;
     margin: 0 auto;
+}
+
+#loader{
+  position: absolute;
+  top: 20%;
+  left: 43%;
 }
 
 #main-answers-container{

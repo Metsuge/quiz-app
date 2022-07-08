@@ -1,17 +1,11 @@
-import '../styling/App.css';
-import QuizComponent from './QuizComponent';
-
-import { useEffect, useState } from 'react';
-import QuizState from '../context/QuizState';
+import "../styling/App.css";
+import QuizComponent from "./QuizComponent";
 
 function App() {
-
-return (
+  return (
     <div className="App">
-      <div id='quiz-container'>
-      <QuizState>
-        {<QuizComponent />}
-      </QuizState>
+      <div id="quiz-container">
+        <QuizComponent />
       </div>
     </div>
   );

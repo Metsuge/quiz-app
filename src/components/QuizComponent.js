@@ -4,6 +4,9 @@ import Answer from "./Answer";
 import {useEffect, useState} from "react";
 import {decode} from "html-entities";
 
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import {Oval} from "react-loader-spinner";
+
 function QuizComponent() {
   const [APIData, setAPI] = useState({});
   const [dataObject, setdataObject] = useState({
@@ -148,59 +151,66 @@ function QuizComponent() {
 
   return (
     <div className="QuizComponent">
-      <div>Your score:{userStatus.correctAnswers}</div>
+      <div id="loader">
+        {dataObject.question === "" ? (
+          <Oval height="100" width="100" color="grey" ariaLabel="loading" />
+        ) : (
+          <>
+            <div>Your score:{userStatus.correctAnswers}</div>
+            {index <= 8 ? (
+              <div id="main-quiz-elements">
+                <div>
+                  Question {index + 1} out of {objectsLength}
+                </div>
 
-      {index <= 8 ? (
-        <div id="main-quiz-elements">
-          <div>
-            Question {index + 1} out of {objectsLength}
-          </div>
+                <div>
+                  <Question question={decode(dataObject.question, {level: "all"})} index={index} />
+                </div>
 
-          <div>
-            <Question question={decode(dataObject.question, {level: "all"})} index={index} />
-          </div>
+                <div id="main-buttons">
+                  {!userStatus.answerSelected ? (
+                    <button disabled={false} className="button next" onClick={() => nextQuestion(index)}>
+                      Skip
+                    </button>
+                  ) : (
+                    <button disabled={!userStatus.answerSelected} className="button next" onClick={() => nextQuestion(index)}>
+                      Next question
+                    </button>
+                  )}
 
-          <div id="main-buttons">
-            {!userStatus.answerSelected ? (
-              <button disabled={false} className="button next" onClick={() => nextQuestion(index)}>
-                Skip
-              </button>
+                  {!userStatus.answerSelected ? (
+                    <button className="button hint" id="hint" onClick={() => hint()}>
+                      Hint
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+
+                <div id="main-answers-container">
+                  {dataObject.answers.map(function (item, i) {
+                    return <Answer key={i} tag={i} userStatus={userStatus} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
+                  })}
+                </div>
+              </div>
             ) : (
-              <button disabled={!userStatus.answerSelected} className="button next" onClick={() => nextQuestion(index)}>
-                Next question
-              </button>
+              <div id="finish">
+                <div id="finish-text">Quiz finished!</div>
+                <div id="stats" className="stats-text h1">
+                  Statistics:
+                  <div className="stats-text">Right answers: {userStatus.correctAnswers} </div>
+                  <div className="stats-text">Wrong answers: {userStatus.incorrect_answers} </div>
+                </div>
+                <button id="play-again-main">
+                  <div id="play-again" onClick={() => restart()}>
+                    PLAY AGAIN
+                  </div>
+                </button>
+              </div>
             )}
-
-            {!userStatus.answerSelected ? (
-              <button className="button hint" id="hint" onClick={() => hint()}>
-                Hint
-              </button>
-            ) : (
-              <></>
-            )}
-          </div>
-
-          <div id="main-answers-container">
-            {dataObject.answers.map(function (item, i) {
-              return <Answer key={i} tag={i} userStatus={userStatus} rightAnswer={rightAnswer} answer={decode(item, {level: "all"})} index={index} isRightAnswer={isRightAnswer} disabled={userStatus.answerSelected} />;
-            })}
-          </div>
-        </div>
-      ) : (
-        <div id="finish">
-          <div id="finish-text">Quiz finished!</div>
-          <div id="stats" className="stats-text h1">
-            Statistics:
-            <div className="stats-text">Right answers: {userStatus.correctAnswers} </div>
-            <div className="stats-text">Wrong answers: {userStatus.incorrect_answers} </div>
-          </div>
-          <button id="play-again-main">
-            <div id="play-again" onClick={() => restart()}>
-              PLAY AGAIN
-            </div>
-          </button>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 }
