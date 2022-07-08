@@ -136,8 +136,9 @@ function QuizComponent() {
   const hint = function () {
     setUserStatus((prevState) => ({
       ...prevState,
-      hintsTaken: userStatus.hintsTaken < 2 ? userStatus.hintsTaken + 1 : userStatus.hintsTaken,
+      hintsTaken: userStatus.hintsTaken < 1 ? userStatus.hintsTaken + 1 : userStatus.hintsTaken,
     }));
+    console.log(userStatus.hintsTaken);
     getWrongAnswers();
   };
 
@@ -159,7 +160,7 @@ function QuizComponent() {
             <Question question={decode(dataObject.question, {level: "all"})} index={index} />
           </div>
 
-          <div>
+          <div id="main-buttons">
             {!userStatus.answerSelected ? (
               <button disabled={false} className="button next" onClick={() => nextQuestion(index)}>
                 Skip
