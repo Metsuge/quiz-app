@@ -1,7 +1,7 @@
 import "../styling/Question.css";
-import { useState } from "react";
+// import { useState } from "react";
 
-function Question({ question, index }) {
+function Question({question, index}) {
   return (
     <div className="Question">
       <div id="question-container">

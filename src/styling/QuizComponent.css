@@ -3,12 +3,15 @@
     height: 400px;
     padding: 35px;
     margin: 0 auto;
+    border: 15px inset #4F9AA4;
+border-radius: 40px 40px 40px 40px;
 }
 
 #loader{
   position: absolute;
-  top: 20%;
-  left: 43%;
+  /* top: 20%;
+  left: 43%; */
+  width: 500px;
 }
 
 #main-answers-container{
@@ -27,7 +30,7 @@
 
 
 .button {
-    background-image: linear-gradient(92.88deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+    background-image: linear-gradient(92.88deg, rgb(96, 178, 186) 9.16%, rgb(67, 146, 204) 43.89%, rgb(22, 118, 165) 64.72%);
     border-radius: 8px;
     border-style: none;
     box-sizing: border-box;

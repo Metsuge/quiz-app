@@ -1,3 +1,4 @@
+/* eslint-disable */
 import "../styling/QuizComponent.css";
 import Question from "./Question";
 import Answer from "./Answer";
@@ -7,7 +8,17 @@ import {decode} from "html-entities";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import {Oval} from "react-loader-spinner";
 
-function QuizComponent() {
+import {connect} from "react-redux";
+import fetchData from "../redux/fetchAPIData/actions";
+
+function QuizComponent({fetchData}) {
+  // console.log(props.APIData);
+  // console.log("loading: ", props.APIData.loading);
+  console.log(fetchData);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const [APIData, setAPI] = useState({});
   const [dataObject, setdataObject] = useState({
     APIData: {},
@@ -85,6 +96,7 @@ function QuizComponent() {
       ...prevState,
       answerSelected: false,
     }));
+
     //goes to next object on in the array
     if (index !== objectsLength - 1) {
       setIndex((prevState) => prevState + 1);
@@ -215,4 +227,16 @@ function QuizComponent() {
   );
 }
 
-export default QuizComponent;
+const mapStateToProps = (state) => {
+  return {
+    APIData: state.APIreducer,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchData: () => dispatch(fetchData()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuizComponent);
