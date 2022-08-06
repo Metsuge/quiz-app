@@ -1,11 +1,13 @@
 import "../styling/Question.css";
-import { useState } from "react";
+import {useSelector} from "react-redux";
+import {decode} from "html-entities";
 
-function Question({ question, index }) {
+function Question() {
+  const question = useSelector((state) => state.APIreducer.question);
   return (
     <div className="Question">
       <div id="question-container">
-        <p>{question}</p>
+        <p>{decode(question, {level: "all"})}</p>
       </div>
       <div></div>
     </div>
