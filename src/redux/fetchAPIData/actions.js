@@ -1,44 +1,79 @@
-import {FETCH_API_REQUEST, FETCH_API_SUCCESS, FETCH_API_FAILURE} from "./actionTypes";
-import axios from "axios";
-// const redux = require("redux");
-// const configureStore = redux.configureStore;
-
-const fetchData = () => {
-  return (dispatch) => {
-    dispatch(fetchAPIRequest());
-    axios
-      .get("https://opentdb.com/api.php?amount=10&type=multiple")
-      .then((response) => {
-        // response.data is the users
-        const data = response.data;
-        dispatch(fetchAPISuccess(data));
-      })
-      .catch((error) => {
-        // error.message is the error message
-        dispatch(fetchAPIFailure(error.message));
-      });
-  };
-};
+import * as actionTypes from "./actionTypes";
 
 export const fetchAPISuccess = (APIData) => {
   return {
-    type: FETCH_API_SUCCESS,
+    type: actionTypes.FETCH_API_SUCCESS,
     payload: APIData,
   };
 };
 
 export const fetchAPIFailure = (error) => {
   return {
-    type: FETCH_API_FAILURE,
+    type: actionTypes.FETCH_API_FAILURE,
     payload: error,
   };
 };
 
 export const fetchAPIRequest = () => {
   return {
-    type: FETCH_API_REQUEST,
+    type: actionTypes.FETCH_API_REQUEST,
   };
 };
 
-// const store = configureStore(reducer);
-export default fetchData;
+export const APIDataHandling = (APIData) => {
+  return {
+    type: actionTypes.HANDLE_API_REQUEST,
+    payload: APIData,
+  };
+};
+
+export const incrementIndex = () => {
+  return {
+    type: actionTypes.INCREMENT_QUESTION_INDEX,
+  };
+};
+
+export const correctAnswerTag = (tag) => {
+  return {
+    type: actionTypes.CORRECT_ANSWER_TAG,
+    payload: tag,
+  };
+};
+
+export const reloadIndex = () => {
+  return {
+    type: actionTypes.RELOAD_INDEX,
+  };
+};
+
+/* ************ USER STATUS ACTIONS *********************** */
+
+export const correctAnswersClicked = () => {
+  return {
+    type: actionTypes.CORRECT_ANSWER_CLICKED,
+  };
+};
+
+export const inCorrectAnswersClicked = () => {
+  return {
+    type: actionTypes.INCORRECT_ANSWER_CLICKED,
+  };
+};
+
+export const useHint = () => {
+  return {
+    type: actionTypes.USED_HINT,
+  };
+};
+
+export const reloadHint = () => {
+  return {
+    type: actionTypes.RELOAD_HINT,
+  };
+};
+
+export const reloadQuiz = () => {
+  return {
+    type: actionTypes.RELOAD_QUIZ,
+  };
+};

@@ -1,8 +1,13 @@
 import {combineReducers} from "redux";
-import APIreducer from "./fetchAPIData/APIreducer";
+import {
+  APIreducer,
+  indexReducer,
+  userStatusReducer,
+} from "./fetchAPIData/reducers";
 
 const rootReducer = combineReducers({
-  APIreducer: APIreducer,
+  APIreducer,
+  userStatusReducer,
 });
 
 export default rootReducer;
