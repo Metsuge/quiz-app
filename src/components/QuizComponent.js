@@ -32,6 +32,7 @@ function QuizComponent() {
   };
 
   const fetchData = () => {
+    console.log("api fetching");
     dispatch(actions.fetchAPIRequest());
     (async () => {
       try {
